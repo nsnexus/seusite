@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Páginas públicas: link.nsnexus.com.br/{slug}
+    match /pages/{slug} {
+      allow read: if true;
+
+      allow create: if request.auth != null
+        && slug.matches('^[a-z0-9-]{3,30}$')
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.slug == slug
+        && validPage();
+
+      allow update: if request.auth != null
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.slug == slug
+        && validPage();
+
+      allow delete: if request.auth != null
+        && resource.data.uid == request.auth.uid;
+    }
+
+    // Vínculo usuário -> slug (privado)
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    function validPage() {
+      let d = request.resource.data;
+      return d.name is string && d.name.size() <= 60
+        && d.bio is string && d.bio.size() <= 300
+        && d.links is list && d.links.size() <= 50
+        && d.avatar is string && d.avatar.size() <= 400000;
+    }
+  }
+}

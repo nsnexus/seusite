@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>NS Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="btn-glass">
+  <div class="bg"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
+  <!-- Carregando -->
+  <div id="screenLoading" class="screen center"><div class="spinner"></div></div>
+
+  <!-- Login -->
+  <section id="screenLogin" class="screen center" hidden>
+    <div class="card">
+      <div class="logo">🔗</div>
+      <h2>Crie sua página de links</h2>
+      <p class="muted">Seu endereço: <b>link.nsnexus.com.br/<span class="accent">voce</span></b></p>
+      <button class="btn google full" id="btnGoogle">
+        <svg viewBox="0 0 48 48" width="20"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36a12 12 0 1 1 7.9-21l5.7-5.7A20 20 0 1 0 44 24c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8A12 12 0 0 1 31.9 15l5.7-5.7A20 20 0 0 0 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A12 12 0 0 1 12.7 28l-6.5 5A20 20 0 0 0 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+        Entrar com Google
+      </button>
+      <div class="divider"><span>ou</span></div>
+      <form id="emailForm" class="stack">
+        <input id="inEmail" type="email" placeholder="E-mail" required autocomplete="email" />
+        <input id="inPass" type="password" placeholder="Senha (mín. 6 caracteres)" required minlength="6" autocomplete="current-password" />
+        <div class="row">
+          <button type="submit" class="btn primary" data-mode="login">Entrar</button>
+          <button type="submit" class="btn ghost" data-mode="signup">Criar conta</button>
+        </div>
+      </form>
+      <button class="linkbtn" id="btnForgot">Esqueci minha senha</button>
+      <p id="loginMsg" class="msg"></p>
+    </div>
+  </section>
+
+  <!-- Escolher endereço -->
+  <section id="screenClaim" class="screen center" hidden>
+    <div class="card">
+      <div class="logo">✨</div>
+      <h2>Escolha seu endereço</h2>
+      <p class="muted">Ele será o link que você vai compartilhar.</p>
+      <div class="slug-box"><span>link.nsnexus.com.br/</span><input id="inClaim" maxlength="30" placeholder="seunome" autocomplete="off" /></div>
+      <p id="claimMsg" class="msg"></p>
+      <button class="btn primary full" id="btnClaim" disabled>Criar minha página</button>
+      <button class="linkbtn" id="btnLogout2">Sair</button>
+    </div>
+  </section>
+
+  <!-- Página -->
+  <header class="topbar" id="topbar" hidden>
+    <button class="icon-btn" id="btnShare" aria-label="Compartilhar">
+      <svg viewBox="0 0 24 24"><path d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg>
+    </button>
+    <div class="top-right">
+      <a class="icon-btn" id="btnView" target="_blank" rel="noopener" aria-label="Ver página pública" hidden>👁️</a>
+      <button class="icon-btn" id="btnEdit" aria-label="Editar" hidden>
+        <svg viewBox="0 0 24 24"><path d="M3 17.3V21h3.7L17.8 9.9l-3.7-3.7L3 17.3zM20.7 7a1 1 0 0 0 0-1.4l-2.3-2.3a1 1 0 0 0-1.4 0l-1.8 1.8 3.7 3.7L20.7 7z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container" id="page" hidden>
+    <section class="profile">
+      <div class="avatar-wrap"><img id="avatar" class="avatar" alt="Foto de perfil" /></div>
+      <h1 id="name"></h1>
+      <p id="bio" class="bio"></p>
+      <div id="socials" class="socials"></div>
+    </section>
+    <section id="links" class="links"></section>
+    <footer class="foot"><a id="footLink" href="/">Crie sua página grátis • NS Links</a></footer>
+  </main>
+
+  <!-- Painel de edição -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="panel" id="panel" aria-hidden="true">
+    <div class="panel-head">
+      <h2>Editar página</h2>
+      <span id="saveStatus" class="save-status"></span>
+      <button class="icon-btn small" id="btnClose" aria-label="Fechar">✕</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="tabPerfil">Perfil</button>
+      <button class="tab" data-tab="tabLinks">Links</button>
+      <button class="tab" data-tab="tabTema">Tema</button>
+      <button class="tab" data-tab="tabConta">Conta</button>
+    </div>
+
+    <div class="tab-body active" id="tabPerfil">
+      <label>Nome<input id="inName" type="text" maxlength="40" /></label>
+      <label>Bio<textarea id="inBio" rows="3" maxlength="160"></textarea></label>
+      <label>URL da foto<input id="inAvatar" type="url" placeholder="https://..." /></label>
+      <label class="file-btn">📷 Enviar foto do celular<input id="inAvatarFile" type="file" accept="image/*" hidden /></label>
+      <h3>Redes sociais</h3>
+      <div class="grid2">
+        <label>Instagram<input data-social="instagram" placeholder="https://instagram.com/..." /></label>
+        <label>WhatsApp<input data-social="whatsapp" placeholder="5594999999999" /></label>
+        <label>TikTok<input data-social="tiktok" placeholder="https://tiktok.com/@..." /></label>
+        <label>YouTube<input data-social="youtube" placeholder="https://youtube.com/..." /></label>
+        <label>LinkedIn<input data-social="linkedin" placeholder="https://linkedin.com/in/..." /></label>
+        <label>E-mail<input data-social="email" placeholder="voce@email.com" /></label>
+      </div>
+    </div>
+
+    <div class="tab-body" id="tabLinks">
+      <form id="linkForm" class="link-form">
+        <input type="hidden" id="inId" />
+        <div class="row">
+          <input id="inEmoji" class="emoji-in" maxlength="2" placeholder="🔗" />
+          <input id="inTitle" placeholder="Título do link" required maxlength="50" />
+        </div>
+        <input id="inUrl" placeholder="https://seusite.com" required />
+        <label class="check"><input type="checkbox" id="inHighlight" /> Destacar (animação)</label>
+        <div class="row">
+          <button type="submit" class="btn primary" id="btnSaveLink">Adicionar link</button>
+          <button type="button" class="btn ghost" id="btnCancelEdit" hidden>Cancelar</button>
+        </div>
+      </form>
+      <p class="hint">Arraste ☰ para reordenar • 👁️ oculta sem excluir</p>
+      <ul id="linkList" class="link-list"></ul>
+    </div>
+
+    <div class="tab-body" id="tabTema">
+      <div id="themeGrid" class="theme-grid"></div>
+      <label>Estilo dos botões
+        <select id="inBtnStyle">
+          <option value="glass">Vidro (glass)</option>
+          <option value="solid">Sólido</option>
+          <option value="outline">Contorno</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="tab-body" id="tabConta">
+      <label>Endereço da página
+        <div class="slug-box"><span>link.nsnexus.com.br/</span><input id="inSlug" maxlength="30" autocomplete="off" /></div>
+      </label>
+      <p id="slugMsg" class="hint"></p>
+      <button class="btn primary full" id="btnChangeSlug" disabled>Alterar endereço</button>
+      <p class="hint" id="userInfo"></p>
+      <button class="btn ghost full" id="btnExport">⬇️ Exportar backup (JSON)</button>
+      <label class="btn ghost full file-btn">⬆️ Importar backup<input id="inImport" type="file" accept="application/json" hidden /></label>
+      <button class="btn ghost full" id="btnLogout">🚪 Sair</button>
+      <button class="btn danger full" id="btnDelete">🗑️ Excluir minha página</button>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
